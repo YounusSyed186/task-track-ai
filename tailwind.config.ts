@@ -59,6 +59,13 @@ export default {
 					progress: 'hsl(var(--status-progress))',
 					resolved: 'hsl(var(--status-resolved))'
 				},
+				artffy: {
+					orange: 'hsl(var(--artffy-orange))',
+					violet: 'hsl(var(--artffy-violet))',
+					teal: 'hsl(var(--artffy-teal))',
+					navy: 'hsl(var(--artffy-navy))',
+					charcoal: 'hsl(var(--artffy-charcoal))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -69,6 +76,10 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			fontFamily: {
+				'playfair': ['Playfair Display', 'Georgia', 'serif'],
+				'inter': ['Inter', 'system-ui', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

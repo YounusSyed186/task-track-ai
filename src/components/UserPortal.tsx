@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Upload, User, Phone, Mail, MessageCircle, CheckCircle } from "lucide-react"
+import { Upload, User, MessageCircle, CheckCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import axios from "axios"
 
@@ -74,10 +74,8 @@ export function UserPortal() {
 
     setIsSubmitting(true)
     try {
-      // Create user first
       await axios.post("http://localhost:8000/api/users/new", userData)
 
-      // Create issue with image
       const formData = new FormData()
       formData.append("description", issueData.description)
       formData.append("user_email", userData.email)
@@ -95,7 +93,6 @@ export function UserPortal() {
         description: "Your issue has been reported successfully",
       })
 
-      // Reset form
       setUserData({ name: "", email: "", phone: "" })
       setIssueData({ description: "", image: null })
       setImagePreview(null)
@@ -131,10 +128,7 @@ export function UserPortal() {
                 You will be notified when a technician is assigned to your issue.
               </p>
             </div>
-            <Button 
-              onClick={() => setSubmissionResult(null)} 
-              className="mt-4"
-            >
+            <Button onClick={() => setSubmissionResult(null)} className="mt-4">
               Submit Another Issue
             </Button>
           </CardContent>
@@ -145,7 +139,6 @@ export function UserPortal() {
 
   return (
     <div className="space-y-6">
-      {/* User Registration */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -190,7 +183,6 @@ export function UserPortal() {
         </CardContent>
       </Card>
 
-      {/* Issue Report */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

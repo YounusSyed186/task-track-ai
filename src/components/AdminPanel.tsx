@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card, CardContent, CardDescription, CardHeader, CardTitle
+} from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { StatusBadge } from "@/components/StatusBadge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Tabs, TabsContent, TabsList, TabsTrigger
+} from "@/components/ui/tabs"
 import { Shield, Users, Wrench, AlertTriangle, Clock } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import axios from "axios"
@@ -44,7 +48,12 @@ export function AdminPanel() {
   const [users, setUsers] = useState<User[]>([])
   const [technicians, setTechnicians] = useState<Technician[]>([])
   const [issues, setIssues] = useState<Issue[]>([])
-  const [stats, setStats] = useState<SystemStats>({ totalUsers: 0, totalTechnicians: 0, totalIssues: 0, availableTechnicians: 0 })
+  const [stats, setStats] = useState<SystemStats>({
+    totalUsers: 0,
+    totalTechnicians: 0,
+    totalIssues: 0,
+    availableTechnicians: 0
+  })
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
@@ -54,24 +63,27 @@ export function AdminPanel() {
 
   const fetchAllData = async () => {
     try {
-      const [usersResponse, techniciansResponse, issuesResponse] = await Promise.all([
+      const [usersRes, techsRes, issuesRes] = await Promise.all([
         axios.get("http://localhost:8000/api/users/list"),
         axios.get("http://localhost:8000/api/technicians/list"),
         axios.get("http://localhost:8000/api/issues/list")
       ])
 
-      setUsers(usersResponse.data)
-      setTechnicians(techniciansResponse.data)
-      setIssues(issuesResponse.data)
+      const usersData = Array.isArray(usersRes.data) ? usersRes.data : []
+      const techsData = Array.isArray(techsRes.data) ? techsRes.data : []
+      const issuesData = Array.isArray(issuesRes.data) ? issuesRes.data : []
 
-      // Calculate stats
-      const availableTechnicians = techniciansResponse.data.filter((t: Technician) => t.status === "available").length
+      setUsers(usersData)
+      setTechnicians(techsData)
+      setIssues(issuesData)
+
       setStats({
-        totalUsers: usersResponse.data.length,
-        totalTechnicians: techniciansResponse.data.length,
-        totalIssues: issuesResponse.data.length,
-        availableTechnicians
+        totalUsers: usersData.length,
+        totalTechnicians: techsData.length,
+        totalIssues: issuesData.length,
+        availableTechnicians: techsData.filter((t) => t.status === "available").length
       })
+
     } catch (error) {
       toast({
         title: "Error",
@@ -147,7 +159,7 @@ export function AdminPanel() {
         </Card>
       </div>
 
-      {/* Data Tables */}
+      {/* Tabs */}
       <Tabs defaultValue="issues" className="space-y-4">
         <TabsList>
           <TabsTrigger value="issues">Issues</TabsTrigger>
@@ -173,9 +185,7 @@ export function AdminPanel() {
                             <StatusBadge status={issue.status} />
                             <Badge variant="outline">{issue.category}</Badge>
                           </div>
-                          
                           <p className="text-sm">{issue.description}</p>
-                          
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span>Reporter: {issue.user_email}</span>
                             {issue.assigned_technician && (
@@ -184,7 +194,6 @@ export function AdminPanel() {
                             <span>{new Date(issue.created_at).toLocaleDateString()}</span>
                           </div>
                         </div>
-                        
                         {issue.image_url && (
                           <img
                             src={issue.image_url}
@@ -209,18 +218,16 @@ export function AdminPanel() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {technicians.map((technician) => (
-                  <Card key={technician.id}>
+                {technicians.map((tech) => (
+                  <Card key={tech.id}>
                     <CardContent className="pt-4">
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium">{technician.name}</h4>
-                          <StatusBadge 
-                            status={technician.status === "available" ? "resolved" : "progress"} 
-                          />
+                          <h4 className="font-medium">{tech.name}</h4>
+                          <StatusBadge status={tech.status === "available" ? "resolved" : "progress"} />
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          Specialty: {technician.specialty}
+                          Specialty: {tech.specialty}
                         </p>
                       </div>
                     </CardContent>

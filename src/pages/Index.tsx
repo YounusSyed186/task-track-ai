@@ -1,11 +1,37 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react"
+import { Sidebar } from "@/components/Sidebar"
+import { UserPortal } from "@/components/UserPortal"
+import { TechnicianDashboard } from "@/components/TechnicianDashboard"
+import { AdminPanel } from "@/components/AdminPanel"
+
+type Role = "user" | "technician" | "admin"
 
 const Index = () => {
+  const [currentRole, setCurrentRole] = useState<Role>("user")
+
+  const renderContent = () => {
+    switch (currentRole) {
+      case "user":
+        return <UserPortal />
+      case "technician":
+        return <TechnicianDashboard />
+      case "admin":
+        return <AdminPanel />
+      default:
+        return <UserPortal />
+    }
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background">
+      <div className="flex">
+        <Sidebar currentRole={currentRole} onRoleChange={setCurrentRole} />
+        
+        <main className="flex-1 md:ml-0 p-6">
+          <div className="max-w-6xl mx-auto">
+            {renderContent()}
+          </div>
+        </main>
       </div>
     </div>
   );
